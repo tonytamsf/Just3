@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Just3</string>
+    <string name="hello_world">Focus On 3 Things A Day</string>
+    <string name="item1">Item 1</string>
+    <string name="item2">Item 2</string>
+    <string name="item3">Item 3</string>
+</resources>

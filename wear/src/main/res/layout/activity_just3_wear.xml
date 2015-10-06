@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.wearable.view.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:id="@+id/container" tools:context=".Just3Wear"
+    tools:deviceIds="wear">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        tools:context=".Just3">
+
+
+    <TextView android:id="@+id/text" app:layout_box="all" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="@string/hello_world"
+        android:layout_marginTop="60px"
+        android:layout_gravity="center_horizontal|right"
+        android:gravity="center_horizontal" />
+    <TextView android:id="@+id/item1" app:layout_box="all" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="@string/item1"
+        android:layout_marginLeft="30px" />
+    <TextView android:id="@+id/item3" app:layout_box="all" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="@string/item2"
+        android:layout_marginLeft="30px" />
+    <TextView android:id="@+id/item4" app:layout_box="all" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="@string/item2"
+        android:layout_marginLeft="30px" />
+    </LinearLayout>
+</android.support.wearable.view.BoxInsetLayout>
