@@ -1,9 +1,11 @@
 package com.wordpress.tonytam.just3;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -37,6 +39,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mTextView = (TextView) findViewById(R.id.title);
 
+
          mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
@@ -67,16 +70,28 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     private void updateDisplay() {
         if (isAmbient()) {
             mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black));
-            mTextView.setTextColor(getResources().getColor(android.R.color.white));
+            mTextView.setTextColor(getResources().getColor(android.R.color.darker_gray));
 
-            // mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
+            mTextView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
         } else {
             mContainerView.setBackground(null);
             mTextView.setTextColor(getResources().getColor(android.R.color.black));
-            //mClockView.setVisibility(View.GONE);
+            mTextView.setText(getResources().getString(R.string.title));
         }
     }
 
+    public void onClick(View v) {
+        TextView textView = (TextView) v;
+        Log.d("OnClick", textView.getText().toString());
+
+        int c = textView.getCurrentTextColor();
+        if (c != Color.GRAY) {
+            textView.setTextColor(Color.GRAY);
+        } else {
+            textView.setTextColor(Color.BLACK);
+        }
+
+    }
     @Override
     public void onConnected(Bundle bundle) {
 
