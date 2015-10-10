@@ -1,38 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wearable.view.BoxInsetLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/container" tools:context=".Just3Wear"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Just3Wear"
     tools:deviceIds="wear">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:orientation="vertical"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_box="all"
         tools:context=".Just3">
 
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/title"
-            android:id="@+id/title"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp" />
+            android:text="@string/title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/light_grey" />
 
-        <TextView android:id="@+id/item1" app:layout_box="all" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="@string/item1"
-        android:layout_marginLeft="30dp"
-            android:textColor="@color/black" />
-    <TextView android:id="@+id/item2" app:layout_box="all" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="@string/item2"
-        android:layout_marginLeft="30dp"
-        android:textColor="@color/black" />
-    <TextView android:id="@+id/item3" app:layout_box="all" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:text="@string/item3"
-        android:layout_marginLeft="30dp"
-        android:textColor="@color/black" />
+        <TextView
+            android:id="@+id/item1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/item1"
+            android:textColor="@color/black"
+            app:layout_box="all" />
+
+        <TextView
+            android:id="@+id/item2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/item2"
+            android:textColor="@color/black"
+            app:layout_box="all" />
+
+        <TextView
+            android:id="@+id/item3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/item3"
+            android:textColor="@color/black"
+            app:layout_box="all" />
 
     </LinearLayout>
 </android.support.wearable.view.BoxInsetLayout>

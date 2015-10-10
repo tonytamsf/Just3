@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Just3</string>
-    <string name="title">Focus On 3 Things A Day</string>
-    <string name="item1">Watch Udacity on Sending Messages</string>
-    <string name="item2">Come up with data to make the decision</string>
-    <string name="item3">Talk with C.</string>
+    <string name="title">Top %d Focus</string>
+    <string name="item1">X Watch Udacity on Sending Messages</string>
+    <string name="item2">Return shoes</string>
+    <string name="item3">Move one repo to ykeykey</string>
+    <string name="done">All Done!</string>
 </resources>
