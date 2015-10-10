@@ -29,16 +29,22 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
     private GoogleApiClient mGoogleApiClient;
+    public int numLeft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // initialize state
+        initState();
+
         setContentView(R.layout.activity_just3_wear);
         setAmbientEnabled();
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mTextView = (TextView) findViewById(R.id.title);
 
+        attachEventsItems();
 
          mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
@@ -46,9 +52,29 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
-
+        updateDisplay();
+        Log.d("Just3War:onCreate - ", "STARTED");
     }
 
+    private void initState() {
+        numLeft = 3;
+    }
+
+    // love touch events
+    private void attachEventsItems() {
+        int ids[] = {R.id.item1, R.id.item2, R.id.item3};
+
+        for (int i : ids) {
+            TextView v = (TextView) findViewById(i);
+            v.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    onClick(v);
+                    return false;
+                }
+            });
+        }
+    }
     @Override
     public void onEnterAmbient(Bundle ambientDetails) {
         super.onEnterAmbient(ambientDetails);
@@ -69,14 +95,19 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     private void updateDisplay() {
         if (isAmbient()) {
-            mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black));
-            mTextView.setTextColor(getResources().getColor(android.R.color.darker_gray));
+            mContainerView.setBackgroundColor(Color.BLACK);
+            mTextView.setTextColor(Color.DKGRAY);
 
             mTextView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
         } else {
             mContainerView.setBackground(null);
-            mTextView.setTextColor(getResources().getColor(android.R.color.black));
-            mTextView.setText(getResources().getString(R.string.title));
+            mTextView.setTextColor(Color.BLACK);
+            if (numLeft == 0) {
+                mTextView.setTextColor(Color.GREEN);
+                mTextView.setText(getResources().getString(R.string.done));
+            } else {
+                mTextView.setText(String.format(getResources().getString(R.string.title), numLeft));
+            }
         }
     }
 
@@ -87,10 +118,12 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         int c = textView.getCurrentTextColor();
         if (c != Color.GRAY) {
             textView.setTextColor(Color.GRAY);
+            numLeft--;
         } else {
             textView.setTextColor(Color.BLACK);
+            numLeft++;
         }
-
+        updateDisplay();
     }
     @Override
     public void onConnected(Bundle bundle) {
