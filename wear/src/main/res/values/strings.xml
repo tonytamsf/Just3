@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">Just3</string>
+    <string name="app_name">tri</string>
     <string name="title">Top %d Focus</string>
-    <string name="item1">X Watch Udacity on Sending Messages</string>
-    <string name="item2">Return shoes</string>
-    <string name="item3">Move one repo to ykeykey</string>
+    <string name="item1">The Factory ykeykey</string>
+    <string name="item2">Just3, save pref</string>
+    <string name="item3">Post happy hour</string>
     <string name="done">All Done!</string>
 </resources>

@@ -13,18 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_box="all"
-        tools:context=".Just3">
+        tools:context=".Just3"
+        android:gravity="fill_vertical">
 
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/title"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/light_grey" />
 
         <TextView
             android:id="@+id/item1"
@@ -32,7 +23,9 @@
             android:layout_height="wrap_content"
             android:text="@string/item1"
             android:textColor="@color/black"
-            app:layout_box="all" />
+            android:layout_weight="33"
+            android:gravity="center"
+            android:background="@color/item1_on" />
 
         <TextView
             android:id="@+id/item2"
@@ -40,7 +33,9 @@
             android:layout_height="wrap_content"
             android:text="@string/item2"
             android:textColor="@color/black"
-            app:layout_box="all" />
+            android:layout_weight="33"
+            android:gravity="center"
+            android:background="@color/item2_on" />
 
         <TextView
             android:id="@+id/item3"
@@ -48,7 +43,16 @@
             android:layout_height="wrap_content"
             android:text="@string/item3"
             android:textColor="@color/black"
-            app:layout_box="all" />
+            android:layout_weight="33"
+            android:gravity="center"
+            android:background="@color/item3_on" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            android:id="@+id/filler_" />
 
     </LinearLayout>
 </android.support.wearable.view.BoxInsetLayout>

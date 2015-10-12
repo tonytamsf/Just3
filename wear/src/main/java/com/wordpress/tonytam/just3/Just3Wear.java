@@ -19,6 +19,7 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class Just3Wear extends WearableActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -30,6 +31,9 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     private TextView mTextView;
     private GoogleApiClient mGoogleApiClient;
     public int numLeft;
+    HashMap<Integer, Integer> colorMapOn;
+    HashMap<Integer, Integer> colorMapOff;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         setAmbientEnabled();
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
-        mTextView = (TextView) findViewById(R.id.title);
+        // mTextView = (TextView) findViewById(R.id.title);
 
         attachEventsItems();
 
@@ -52,6 +56,18 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
+        colorMapOn = new HashMap<Integer, Integer>(3);
+        colorMapOn.put(R.id.item1, R.color.item1_on);
+        colorMapOn.put(R.id.item2, R.color.item2_on);
+        colorMapOn.put(R.id.item3, R.color.item3_on);
+
+        colorMapOff = new HashMap<Integer, Integer>(3);
+        colorMapOff.put(R.id.item1, R.color.item1_off);
+        colorMapOff.put(R.id.item2, R.color.item2_off);
+        colorMapOff.put(R.id.item3, R.color.item3_off);
+
+        // Map color
+
         updateDisplay();
         Log.d("Just3War:onCreate - ", "STARTED");
     }
@@ -96,30 +112,34 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     private void updateDisplay() {
         if (isAmbient()) {
             mContainerView.setBackgroundColor(Color.BLACK);
-            mTextView.setTextColor(Color.DKGRAY);
+            // mTextView.setTextColor(Color.DKGRAY);
 
-            mTextView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
+            // mTextView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
         } else {
             mContainerView.setBackground(null);
-            mTextView.setTextColor(Color.BLACK);
+            // mTextView.setTextColor(Color.BLACK);
             if (numLeft == 0) {
-                mTextView.setTextColor(Color.GREEN);
-                mTextView.setText(getResources().getString(R.string.done));
+                // mTextView.setTextColor(Color.GREEN);
+                // mTextView.setText(getResources().getString(R.string.done));
             } else {
-                mTextView.setText(String.format(getResources().getString(R.string.title), numLeft));
+                // mTextView.setText(String.format(getResources().getString(R.string.title), numLeft));
             }
         }
     }
 
     public void onClick(View v) {
+
         TextView textView = (TextView) v;
         Log.d("OnClick", textView.getText().toString());
 
         int c = textView.getCurrentTextColor();
         if (c != Color.GRAY) {
+            textView.setBackgroundColor(getResources().getColor(colorMapOff.get(textView.getId())));
             textView.setTextColor(Color.GRAY);
             numLeft--;
         } else {
+            textView.setBackgroundColor(getResources().getColor(colorMapOn.get(textView.getId())));
+
             textView.setTextColor(Color.BLACK);
             numLeft++;
         }
