@@ -1,6 +1,10 @@
 # Just3
 Just 3 Per Day App for Android Wearable
 
+# Day 2
+![icon](https://raw.githubusercontent.com/tonytamsf/Just3/81c1f9569b0cc20eea0382879d6e66e6de337d86/CHANGELOG/images/20151012_164832.jpg)
+![tri band](https://raw.githubusercontent.com/tonytamsf/Just3/2bb74a3989209cd3e193e902aaa08ec08f74a1f2/CHANGELOG/images/20151012_160037.jpg)
+
 # Day 1
 ![20151006_165035](https://cloud.githubusercontent.com/assets/149837/10325954/ac0ed130-6c4a-11e5-913f-d9443f39094e.jpg)
 
