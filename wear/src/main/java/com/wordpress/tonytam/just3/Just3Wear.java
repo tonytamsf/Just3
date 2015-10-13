@@ -36,7 +36,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     public int numLeft;
     HashMap<Integer, Integer> colorMapOn;
     HashMap<Integer, Integer> colorMapOff;
-
+    private float origTextSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         // mTextView = (TextView) findViewById(R.id.title);
-
+        origTextSize = ((TextView) findViewById(R.id.item1)).getTextSize();
         attachEventsItems();
 
          mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -89,6 +89,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     onClick(v);
+
                     return false;
                 }
             });
@@ -142,33 +143,45 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             //textView.setBackgroundColor(getResources().getColor(colorMapOff.get(textView.getId())));
             animateBackground(textView,
                     getResources().getColor(colorMapOn.get(textView.getId())),
-                    getResources().getColor(colorMapOff.get(textView.getId())));
+                    getResources().getColor(colorMapOff.get(textView.getId())),
+                    Color.BLACK,
+                    Color.GRAY
+                    );
              numLeft--;
+            textView.setTextSize((float)( origTextSize - 2.0));
+
         } else {
             textView.setBackgroundColor(getResources().getColor(colorMapOn.get(textView.getId())));
             animateBackground(textView,
                     getResources().getColor(colorMapOff.get(textView.getId())),
-                    getResources().getColor(colorMapOn.get(textView.getId())));
+                    getResources().getColor(colorMapOn.get(textView.getId())),
+                    Color.GRAY,
+                    Color.BLACK
+                    );
             textView.setTextColor(Color.BLACK);
             numLeft++;
+            textView.setTextSize(origTextSize);
         }
         updateDisplay();
     }
 
     private
-    void animateBackground(final TextView textView, int colorFrom, int colorTo) {
+    void animateBackground(final TextView textView,
+                           int colorFrom, int colorTo,
+                           int textColorFrom, int textColorTo) {
         ValueAnimator colorAnimation = ValueAnimator
-                .ofObject(new ArgbEvaluator(), colorFrom, colorTo)
+                .ofObject(new ArgbEvaluator(),
+                        colorFrom, colorTo)
                 .setDuration(1000);
         ValueAnimator colorBackgroundAnimation = ValueAnimator
-                .ofObject(new ArgbEvaluator(), Color.BLACK, Color.GRAY)
+                .ofObject(new ArgbEvaluator(),
+                        textColorFrom, textColorTo)
                         .setDuration(1000);
         colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animator) {
                 textView.setBackgroundColor((Integer) animator.getAnimatedValue());
-                textView.setTextSize(12);
             }
 
         });
