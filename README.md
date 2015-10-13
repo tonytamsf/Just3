@@ -19,3 +19,5 @@ Just 3 Per Day App for Android Wearable
 # Icon
 http://makeappicon.com/download/df2a190761c445d989b4289fa0552ac3
 
+# References
+- http://stackoverflow.com/questions/2614545/animate-change-of-view-background-color-in-android

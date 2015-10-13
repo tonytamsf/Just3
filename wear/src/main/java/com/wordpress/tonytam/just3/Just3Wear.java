@@ -1,6 +1,9 @@
 package com.wordpress.tonytam.just3;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
@@ -129,22 +132,57 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     public void onClick(View v) {
 
-        TextView textView = (TextView) v;
+        final TextView textView = (TextView) v;
         Log.d("OnClick", textView.getText().toString());
 
         int c = textView.getCurrentTextColor();
         if (c != Color.GRAY) {
-            textView.setBackgroundColor(getResources().getColor(colorMapOff.get(textView.getId())));
             textView.setTextColor(Color.GRAY);
-            numLeft--;
+
+            //textView.setBackgroundColor(getResources().getColor(colorMapOff.get(textView.getId())));
+            animateBackground(textView,
+                    getResources().getColor(colorMapOn.get(textView.getId())),
+                    getResources().getColor(colorMapOff.get(textView.getId())));
+             numLeft--;
         } else {
             textView.setBackgroundColor(getResources().getColor(colorMapOn.get(textView.getId())));
-
+            animateBackground(textView,
+                    getResources().getColor(colorMapOff.get(textView.getId())),
+                    getResources().getColor(colorMapOn.get(textView.getId())));
             textView.setTextColor(Color.BLACK);
             numLeft++;
         }
         updateDisplay();
     }
+
+    private
+    void animateBackground(final TextView textView, int colorFrom, int colorTo) {
+        ValueAnimator colorAnimation = ValueAnimator
+                .ofObject(new ArgbEvaluator(), colorFrom, colorTo)
+                .setDuration(1000);
+        ValueAnimator colorBackgroundAnimation = ValueAnimator
+                .ofObject(new ArgbEvaluator(), Color.BLACK, Color.GRAY)
+                        .setDuration(1000);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                textView.setBackgroundColor((Integer) animator.getAnimatedValue());
+                textView.setTextSize(12);
+            }
+
+        });
+        colorBackgroundAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                textView.setTextColor((Integer) animator.getAnimatedValue());
+            }
+        });
+        colorAnimation.start();
+        colorBackgroundAnimation.start();
+    }
+
     @Override
     public void onConnected(Bundle bundle) {
 

@@ -25,7 +25,8 @@
             android:textColor="@color/black"
             android:layout_weight="33"
             android:gravity="center"
-            android:background="@color/item1_on" />
+            android:background="@color/item1_on"
+            />
 
         <TextView
             android:id="@+id/item2"
