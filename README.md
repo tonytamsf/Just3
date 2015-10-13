@@ -11,3 +11,7 @@ Just 3 Per Day App for Android Wearable
 - 151,209,252 #97D1FC
 - 255,245,183 #FFF5B7
 - 254,191,212 #FEBFD4
+
+# Icon
+http://makeappicon.com/download/df2a190761c445d989b4289fa0552ac3
+
