@@ -21,7 +21,7 @@ public class StepService extends WearableListenerService {
                         dataEvent.getDataItem())
                         .getDataMap();
                 String path = dataEvent.getDataItem().getUri().getPath();
-                if (path.equals("/step-counter")) {
+                if (path.equals("/v1/step-counter")) {
                     int steps = dataMap.getInt("step-count");
                     long time = dataMap.getLong("timstamp");
                 }
