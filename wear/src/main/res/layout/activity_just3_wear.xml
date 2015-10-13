@@ -17,7 +17,7 @@
         android:gravity="fill_vertical">
 
 
-        <TextView
+        <EditText
             android:id="@+id/item1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,10 +25,18 @@
             android:textColor="@color/black"
             android:layout_weight="33"
             android:gravity="center"
+            android:longClickable="true"
             android:background="@color/item1_on"
-            />
+            android:textSize="15dp"
+            android:editable="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:enabled="true"
+            android:focusableInTouchMode="true"
+            android:inputType="text"
+            android:singleLine="true"/>
 
-        <TextView
+        <EditText
             android:id="@+id/item2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,9 +44,19 @@
             android:textColor="@color/black"
             android:layout_weight="33"
             android:gravity="center"
-            android:background="@color/item2_on" />
+            android:longClickable="true"
+            android:background="@color/item2_on"
+            android:textSize="15dp"
+            android:editable="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:enabled="true"
+            android:focusableInTouchMode="true"
+            android:inputType="text"
+            android:singleLine="true"/>
 
-        <TextView
+
+        <EditText
             android:id="@+id/item3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +64,16 @@
             android:textColor="@color/black"
             android:layout_weight="33"
             android:gravity="center"
-            android:background="@color/item3_on" />
+            android:longClickable="true"
+            android:background="@color/item3_on"
+            android:textSize="15dp"
+            android:editable="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:enabled="true"
+            android:focusableInTouchMode="true"
+            android:inputType="text"
+            android:singleLine="true" />
 
         <TextView
             android:layout_width="wrap_content"
