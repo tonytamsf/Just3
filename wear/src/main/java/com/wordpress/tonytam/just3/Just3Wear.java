@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
@@ -39,6 +40,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("HH:mm", Locale.US);
+    public static int LONG_PRESS_TIME = 500; // Time in miliseconds
 
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
@@ -46,7 +48,10 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     public int numLeft;
     HashMap<Integer, Integer> colorMapOn;
     HashMap<Integer, Integer> colorMapOff;
+    HashMap<Integer, Integer> itemState;
     private float origTextSize;
+    final Handler _handler = new Handler();
+    private TextView longPressedView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,8 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         // mTextView = (TextView) findViewById(R.id.title);
         origTextSize = ((TextView) findViewById(R.id.item1)).getTextSize();
+
+        // touchy feely
         attachEventsItems();
 
          mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -69,6 +76,8 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 .addOnConnectionFailedListener(this)
                 .build();
         mGoogleApiClient.connect();
+
+        // Setup color map
         colorMapOn = new HashMap<Integer, Integer>(3);
         colorMapOn.put(R.id.item1, R.color.item1_on);
         colorMapOn.put(R.id.item2, R.color.item2_on);
@@ -79,7 +88,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         colorMapOff.put(R.id.item2, R.color.item2_off);
         colorMapOff.put(R.id.item3, R.color.item3_off);
 
-        sendTriData();
         refreshViewWithData();
 
         // Map color
@@ -87,6 +95,15 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         updateDisplay();
         Log.d("Just3War:onCreate - ", "STARTED");
     }
+
+    Runnable _longPressed = new Runnable() {
+        public void run() {
+            if (longPressedView != null) {
+                displaySpeechRecognizer();
+            }
+            Log.i("info","LongPress");
+        }
+    };
 
     private void initState() {
         numLeft = 3;
@@ -101,10 +118,16 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             v.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    Log.d("attachEventsItems", String.valueOf(event.getAction()));
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        onClick(v);
-                        return true;
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            longPressedView = (TextView) v;
+                            _handler.postDelayed(_longPressed, LONG_PRESS_TIME);
+                            onClick(v);
+                            return true;
+                        case MotionEvent.ACTION_UP:
+
+                            _handler.removeCallbacks(_longPressed);
+                            return true;
                     }
                     return false;
                 }
@@ -169,60 +192,13 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         v.setEnabled(true);
         v.setClickable(true);
         v.setFocusableInTouchMode(true);
-        ((TextView) v).setKeyListener(new KeyListener() {
-            @Override
-            public int getInputType() {
-                return 0;
-            }
-
-            @Override
-            public boolean onKeyDown(View view, Editable text, int keyCode, KeyEvent event) {
-                return false;
-            }
-
-            @Override
-            public boolean onKeyUp(View view, Editable text, int keyCode, KeyEvent event) {
-                return false;
-            }
-
-            @Override
-            public boolean onKeyOther(View view, Editable text, KeyEvent event) {
-                return false;
-            }
-
-            @Override
-            public void clearMetaKeyState(View view, Editable content, int states) {
-
-            }
-        });
-
 
         int c = textView.getCurrentTextColor();
         if (c != Color.GRAY) {
-            textView.setTextColor(Color.GRAY);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (origTextSize - 2.0));
-
-            //textView.setBackgroundColor(getResources().getColor(colorMapOff.get(textView.getId())));
-            animateBackground(textView,
-                    getResources().getColor(colorMapOn.get(textView.getId())),
-                    getResources().getColor(colorMapOff.get(textView.getId())),
-                    Color.BLACK,
-                    Color.GRAY
-                    );
-             numLeft--;
+            setItemNew(textView);
 
         } else {
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, origTextSize);
-
-            textView.setBackgroundColor(getResources().getColor(colorMapOn.get(textView.getId())));
-            animateBackground(textView,
-                    getResources().getColor(colorMapOff.get(textView.getId())),
-                    getResources().getColor(colorMapOn.get(textView.getId())),
-                    Color.GRAY,
-                    Color.BLACK
-                    );
-            textView.setTextColor(Color.BLACK);
-            numLeft++;
+            setItemDone(textView);
         }
         updateDisplay();
 
@@ -233,6 +209,37 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         }
     }
 
+    private
+    void setItemDone(TextView textView) {
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, origTextSize);
+
+        textView.setBackgroundColor(getResources().getColor(colorMapOn.get(textView.getId())));
+        animateBackground(textView,
+                getResources().getColor(colorMapOff.get(textView.getId())),
+                getResources().getColor(colorMapOn.get(textView.getId())),
+                Color.GRAY,
+                Color.BLACK
+        );
+        textView.setTextColor(Color.BLACK);
+        numLeft++;
+
+    }
+    private
+    void setItemNew(TextView textView) {
+        textView.setTextColor(Color.GRAY);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (origTextSize - 2.0));
+
+        //textView.setBackgroundColor(getResources().getColor(colorMapOff.get(textView.getId())));
+        animateBackground(textView,
+                getResources().getColor(colorMapOn.get(textView.getId())),
+                getResources().getColor(colorMapOff.get(textView.getId())),
+                Color.BLACK,
+                Color.GRAY
+        );
+        textView.setTextColor(Color.GRAY);
+
+        numLeft--;
+    }
     private
     void animateBackground(final TextView textView,
                            int colorFrom, int colorTo,
@@ -292,9 +299,9 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
         Context context = getApplicationContext();
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        result.add(sharedPref.getString("item1", "item1"));
-        result.add(sharedPref.getString("item2", "item2"));
-        result.add(sharedPref.getString("item3", "item3"));
+        result.add(sharedPref.getString("item1", ""));
+        result.add(sharedPref.getString("item2", ""));
+        result.add(sharedPref.getString("item3", ""));
         return result;
     }
 
@@ -370,6 +377,11 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             List<String> results = data.getStringArrayListExtra(
                     RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
+            if (longPressedView != null) {
+                TextView v = (TextView) longPressedView;
+                v.setText(spokenText);
+                setItemNew(v);
+            }
             // Do something with spokenText
         }
         super.onActivityResult(requestCode, resultCode, data);

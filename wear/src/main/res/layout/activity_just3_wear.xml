@@ -17,7 +17,7 @@
         android:gravity="fill_vertical">
 
 
-        <EditText
+        <TextView
             android:id="@+id/item1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,6 @@
             android:longClickable="true"
             android:background="@color/item1_on"
             android:textSize="15dp"
-            android:editable="true"
             android:clickable="true"
             android:focusable="true"
             android:enabled="true"
@@ -36,7 +35,7 @@
             android:inputType="text"
             android:singleLine="true"/>
 
-        <EditText
+        <TextView
             android:id="@+id/item2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +46,6 @@
             android:longClickable="true"
             android:background="@color/item2_on"
             android:textSize="15dp"
-            android:editable="true"
             android:clickable="true"
             android:focusable="true"
             android:enabled="true"
@@ -56,7 +54,7 @@
             android:singleLine="true"/>
 
 
-        <EditText
+        <TextView
             android:id="@+id/item3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,7 +65,6 @@
             android:longClickable="true"
             android:background="@color/item3_on"
             android:textSize="15dp"
-            android:editable="true"
             android:clickable="true"
             android:focusable="true"
             android:enabled="true"
