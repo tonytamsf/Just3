@@ -25,14 +25,9 @@
             android:textColor="@color/black"
             android:layout_weight="33"
             android:gravity="center"
-            android:longClickable="true"
             android:background="@color/item1_on"
             android:textSize="15dp"
-            android:clickable="true"
-            android:focusable="true"
             android:enabled="true"
-            android:focusableInTouchMode="true"
-            android:inputType="text"
             android:singleLine="true"/>
 
         <TextView
@@ -43,14 +38,9 @@
             android:textColor="@color/black"
             android:layout_weight="33"
             android:gravity="center"
-            android:longClickable="true"
             android:background="@color/item2_on"
             android:textSize="15dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:enabled="true"
             android:focusableInTouchMode="true"
-            android:inputType="text"
             android:singleLine="true"/>
 
 
@@ -62,14 +52,9 @@
             android:textColor="@color/black"
             android:layout_weight="33"
             android:gravity="center"
-            android:longClickable="true"
             android:background="@color/item3_on"
             android:textSize="15dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:enabled="true"
             android:focusableInTouchMode="true"
-            android:inputType="text"
             android:singleLine="true" />
 
         <TextView

@@ -40,7 +40,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("HH:mm", Locale.US);
-    public static int LONG_PRESS_TIME = 500; // Time in miliseconds
+    public static int LONG_PRESS_TIME = 1500; // Time in miliseconds
 
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
@@ -50,8 +50,8 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     HashMap<Integer, Integer> colorMapOff;
     HashMap<Integer, Integer> itemState;
     private float origTextSize;
-    final Handler _handler = new Handler();
     private TextView longPressedView;
+    final Handler _handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,10 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         numLeft = 3;
     }
 
-    // love touch events
+    // When simple tap, mark items as done or undone
+    // When tap and hold for 800ms, then bring up the voice input
+    // The ACTION_MOVE is to cancel the long hold because it may be a swipe to get back to the
+    //    watch
     private void attachEventsItems() {
         int ids[] = {R.id.item1, R.id.item2, R.id.item3};
 
@@ -118,33 +121,38 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             v.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
+                    Log.d("onTouch",
+                            String.valueOf(event.getAction())
+                            + " X="
+                                    + String.valueOf(event.getX()));
+                    //
+                    // Do not want to confuse a swipe to the left
+                    if (event.getX() < 120) {
+                        return false;
+                    }
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             longPressedView = (TextView) v;
-                            _handler.postDelayed(_longPressed, LONG_PRESS_TIME);
                             onClick(v);
+                            _handler.postDelayed(_longPressed, LONG_PRESS_TIME);
+                            Log.d("onTouch", "action down");
                             return true;
                         case MotionEvent.ACTION_UP:
-
                             _handler.removeCallbacks(_longPressed);
+                            Log.d("onTouch", "action up");
+
                             return true;
+                        case MotionEvent.ACTION_MOVE:
+                            _handler.removeCallbacks(_longPressed);
+                            Log.d("onTouch", "action move");
+
+                            return true;
+
                     }
                     return false;
                 }
             });
-
-            v.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    onLongClick(v);
-                    return true;
-                }
-            });
         }
-    }
-
-    public void onLongClick(View v) {
-        Log.d("onLongClick", v.toString());
     }
 
     @Override
@@ -188,25 +196,17 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         final TextView textView = (TextView) v;
         Log.d("OnClick", textView.getText().toString());
 
-        v.setFocusable(true);
-        v.setEnabled(true);
-        v.setClickable(true);
-        v.setFocusableInTouchMode(true);
-
         int c = textView.getCurrentTextColor();
         if (c != Color.GRAY) {
-            setItemNew(textView);
+            setItemDone(textView);
 
         } else {
-            setItemDone(textView);
+            setItemNew(textView);
         }
         updateDisplay();
 
         // save Data
         sendTriData();
-        if (numLeft == 0) {
-            displaySpeechRecognizer();
-        }
     }
 
     private

@@ -23,3 +23,4 @@ http://makeappicon.com/download/df2a190761c445d989b4289fa0552ac3
 - http://stackoverflow.com/questions/2614545/animate-change-of-view-background-color-in-android
 - http://stackoverflow.com/questions/3687065/textview-settextsize-behaves-abnormally-how-to-set-text-size-of-textview-dynam
 - https://developer.android.com/distribute/googleplay/wear.html
+- LongPressed http://stackoverflow.com/questions/11701826/long-press-android?rq=1
