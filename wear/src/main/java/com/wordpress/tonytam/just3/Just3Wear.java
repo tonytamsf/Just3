@@ -211,21 +211,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     private
     void setItemDone(TextView textView) {
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, origTextSize);
-
-        textView.setBackgroundColor(getResources().getColor(colorMapOn.get(textView.getId())));
-        animateBackground(textView,
-                getResources().getColor(colorMapOff.get(textView.getId())),
-                getResources().getColor(colorMapOn.get(textView.getId())),
-                Color.GRAY,
-                Color.BLACK
-        );
-        textView.setTextColor(Color.BLACK);
-        numLeft++;
-
-    }
-    private
-    void setItemNew(TextView textView) {
         textView.setTextColor(Color.GRAY);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) (origTextSize - 2.0));
 
@@ -239,6 +224,22 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         textView.setTextColor(Color.GRAY);
 
         numLeft--;
+
+
+    }
+    private
+    void setItemNew(TextView textView) {
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, origTextSize);
+
+        textView.setBackgroundColor(getResources().getColor(colorMapOn.get(textView.getId())));
+        animateBackground(textView,
+                getResources().getColor(colorMapOff.get(textView.getId())),
+                getResources().getColor(colorMapOn.get(textView.getId())),
+                Color.GRAY,
+                Color.BLACK
+        );
+        textView.setTextColor(Color.BLACK);
+        numLeft++;
     }
     private
     void animateBackground(final TextView textView,
