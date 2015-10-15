@@ -382,6 +382,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 TextView v = (TextView) longPressedView;
                 v.setText(spokenText);
                 setItemNew(v);
+                sendTriData();
             }
             // Do something with spokenText
         }
