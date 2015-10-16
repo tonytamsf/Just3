@@ -9,6 +9,7 @@ Just 3 Per Day App for Android Wearable
 ![round and square](https://raw.githubusercontent.com/tonytamsf/Just3/master/CHANGELOG/images/round%20%26%20square%20faces.jpg)
 
 # Day 2
+- Icon from Cate and color scheme
 ![icon](https://raw.githubusercontent.com/tonytamsf/Just3/81c1f9569b0cc20eea0382879d6e66e6de337d86/CHANGELOG/images/20151012_164832.jpg)
 ![tri band](https://raw.githubusercontent.com/tonytamsf/Just3/2bb74a3989209cd3e193e902aaa08ec08f74a1f2/CHANGELOG/images/20151012_160037.jpg)
 
