@@ -36,7 +36,7 @@
                 android:singleLine="false"
                 android:paddingLeft="35sp"
                 android:paddingRight="35sp"
-                />
+                android:paddingTop="10sp" />
 
         </RelativeLayout>
 
@@ -52,12 +52,12 @@
                 android:layout_height="match_parent"
                 android:text="@string/item2"
                 android:textColor="@color/black"
-                android:layout_weight="33"
                 android:gravity="center"
                 android:background="@color/item2_on"
                 android:textSize="15sp"
                 android:singleLine="false"
                  />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -71,7 +71,6 @@
                 android:layout_height="fill_parent"
                 android:text="@string/item3"
                 android:textColor="@color/black"
-                android:layout_weight="33"
                 android:gravity="center"
                 android:background="@color/item3_on"
                 android:textSize="15sp"
@@ -79,7 +78,7 @@
                 android:nestedScrollingEnabled="true"
                 android:paddingLeft="30sp"
                 android:paddingRight="30sp"
-                 />
+                android:paddingBottom="10dp" />
         </RelativeLayout>
 
         <TextView

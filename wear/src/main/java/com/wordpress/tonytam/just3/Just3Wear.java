@@ -2,17 +2,22 @@ package com.wordpress.tonytam.just3;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
+import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -50,6 +55,8 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     final Handler _handler = new Handler();
     private static final int SPEECH_REQUEST_CODE = 0;
 
+    Just3Wear that = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,43 +64,65 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         // initialize state
         initState();
 
-        setContentView(R.layout.activity_just3_wear);
-        if ()
-        setAmbientEnabled();
+        setContentView(R.layout.activity_main_stub);
+        WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
+        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override
+            public void onLayoutInflated(WatchViewStub watchViewStub) {
+                setAmbientEnabled();
 
-        mContainerView = (BoxInsetLayout) findViewById(R.id.container);
-        // mTextView = (TextView) findViewById(R.id.title);
+                mContainerView = (BoxInsetLayout) findViewById(R.id.container);
+                // mTextView = (TextView) findViewById(R.id.title);
 
-        // Look at the first item text size, we'll downsize when an item is marked done
-        origTextSize = ((TextView) findViewById(R.id.item1)).getTextSize();
+                // Look at the first item text size, we'll downsize when an item is marked done
+                origTextSize = ((TextView) findViewById(R.id.item1)).getTextSize();
 
-        // We want touch events
-        attachEventsItems();
+                // We want touch events
+                attachEventsItems();
 
-        // Send data to the phone
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
+                // Send data to the phone
+                mGoogleApiClient = new GoogleApiClient.Builder(that)
+                        .addApi(Wearable.API)
+                        .addConnectionCallbacks(that)
+                        .addOnConnectionFailedListener(that)
+                        .build();
+                mGoogleApiClient.connect();
 
-        // Setup color map
-        colorMapOn = new HashMap<Integer, Integer>(3);
-        colorMapOn.put(R.id.item1, R.color.item1_on);
-        colorMapOn.put(R.id.item2, R.color.item2_on);
-        colorMapOn.put(R.id.item3, R.color.item3_on);
+                // Setup color map
+                colorMapOn = new HashMap<Integer, Integer>(3);
+                colorMapOn.put(R.id.item1, R.color.item1_on);
+                colorMapOn.put(R.id.item2, R.color.item2_on);
+                colorMapOn.put(R.id.item3, R.color.item3_on);
 
-        colorMapOff = new HashMap<Integer, Integer>(3);
-        colorMapOff.put(R.id.item1, R.color.item1_off);
-        colorMapOff.put(R.id.item2, R.color.item2_off);
-        colorMapOff.put(R.id.item3, R.color.item3_off);
+                colorMapOff = new HashMap<Integer, Integer>(3);
+                colorMapOff.put(R.id.item1, R.color.item1_off);
+                colorMapOff.put(R.id.item2, R.color.item2_off);
+                colorMapOff.put(R.id.item3, R.color.item3_off);
 
-        itemDoneState = new HashMap<Integer, Boolean>(3);
-        refreshViewWithData();
+                itemDoneState = new HashMap<Integer, Boolean>(3);
+                refreshViewWithData();
 
-        updateDisplay();
-        Log.d("Just3War:onCreate - ", "STARTED");
+                // Darn Moto 360
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int width = size.x;
+                int height = size.y;
+                Log.d("Screensize",
+                        String.valueOf(width)
+                                + " x "
+                                + String.valueOf(height));
+                View motoBox = findViewById(R.id.moto360filler);
+                if (motoBox != null) {
+                    motoBox.getLayoutParams().height = width - height;
+                    motoBox.setLayoutParams(motoBox.getLayoutParams());
+                }
+                updateDisplay();
+                Log.d("Just3War:onCreate - ", "STARTED");
+            }
+        });
+
+
     }
 
     Runnable _longPressed = new Runnable() {
@@ -295,7 +324,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     public void refreshViewWithData() {
         // Load Data
-        ArrayList<String> data = loadDataFromPreferences();
+        ArrayList<String> data = loadPreferences();
 
         ((TextView) findViewById(R.id.item1)).setText(data.get(0));
         ((TextView) findViewById(R.id.item2)).setText(data.get(1));
@@ -313,15 +342,15 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         }
     }
 
-    public ArrayList<String> loadDataFromPreferences() {
+    public ArrayList<String> loadPreferences() {
         ArrayList<String> result = new ArrayList<String>(3);
         int ids[] = {R.id.item1, R.id.item2, R.id.item3};
 
         Context context = getApplicationContext();
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        result.add(sharedPref.getString("item1", ""));
-        result.add(sharedPref.getString("item2", ""));
-        result.add(sharedPref.getString("item3", ""));
+        result.add(sharedPref.getString("item1",  getResources().getString(R.string.item1)));
+        result.add(sharedPref.getString("item2", getResources().getString(R.string.item2)));
+        result.add(sharedPref.getString("item3", getResources().getString(R.string.item3)));
         itemDoneState.put((int) findViewById(ids[0]).getTag(), sharedPref.getString("item1State", "false") == "true");
         itemDoneState.put((int) findViewById(ids[1]).getTag(), sharedPref.getString("item2State", "false") == "true");
         itemDoneState.put((int) findViewById(ids[2]).getTag(), sharedPref.getString("item3State", "false") == "true");
