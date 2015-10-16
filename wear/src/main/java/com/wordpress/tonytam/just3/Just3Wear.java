@@ -48,6 +48,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     private float origTextSize;
     private TextView longPressedView;
     final Handler _handler = new Handler();
+    private static final int SPEECH_REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,16 +58,20 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         initState();
 
         setContentView(R.layout.activity_just3_wear);
+        if ()
         setAmbientEnabled();
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         // mTextView = (TextView) findViewById(R.id.title);
+
+        // Look at the first item text size, we'll downsize when an item is marked done
         origTextSize = ((TextView) findViewById(R.id.item1)).getTextSize();
 
-        // touchy feely
+        // We want touch events
         attachEventsItems();
 
-         mGoogleApiClient = new GoogleApiClient.Builder(this)
+        // Send data to the phone
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -86,8 +91,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
         itemDoneState = new HashMap<Integer, Boolean>(3);
         refreshViewWithData();
-
-        // Map color
 
         updateDisplay();
         Log.d("Just3War:onCreate - ", "STARTED");
@@ -171,6 +174,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         super.onExitAmbient();
     }
 
+    // refresh the UI based on data changes
     private void updateDisplay() {
         if (isAmbient()) {
             mContainerView.setBackgroundColor(Color.BLACK);
@@ -392,7 +396,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 });
     }
 
-    private static final int SPEECH_REQUEST_CODE = 0;
 
     // Create an intent that can start the Speech Recognizer activity
     private void displaySpeechRecognizer() {

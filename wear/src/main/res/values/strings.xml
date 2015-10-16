@@ -2,7 +2,7 @@
     <string name="app_name">tri</string>
     <string name="title">Tri</string>
     <string name="item1">Tap: to complete a task</string>
-    <string name="item2">Long hold: to change a task</string>
+    <string name="item2">Long hold: to change task</string>
     <string name="item3">Focus: on 3 task a day</string>
     <string name="done">All Done!</string>
 </resources>
