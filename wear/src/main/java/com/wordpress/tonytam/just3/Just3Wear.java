@@ -50,7 +50,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     public static int LONG_PRESS_TIME = 1500;
     public static int HACK_NO_TOUCH_AREA = 100;
     private BoxInsetLayout mContainerView;
-    private TextView mTextView;
     private GoogleApiClient mGoogleApiClient;
     public int numLeft;
     HashMap<Integer, Integer> colorMapOn;
@@ -256,7 +255,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             inPressed = false;
             return;
         }
-        if (! itemDoneState.get((Integer) textView.getTag())) {
+        if (! itemDoneState.get(textView.getTag())) {
             // Mark item as done
             Log.d("item state A", itemDoneState.get(textView.getTag()).toString());
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -394,19 +393,18 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     // TODO: After loading data, recalculate what is numLeft
     public ArrayList<String> loadPreferences() {
-        ArrayList<String> result = new ArrayList<String>(3);
+        ArrayList<String> result = new ArrayList<>(3);
         int ids[] = {R.id.item1, R.id.item2, R.id.item3};
 
-        Context context = getApplicationContext();
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         result.add(sharedPref.getString("item1", getResources().getString(R.string.item1)));
         result.add(sharedPref.getString("item2", getResources().getString(R.string.item2)));
         result.add(sharedPref.getString("item3", getResources().getString(R.string.item3)));
 
         // NOTE: Weird, Boolean.loadValue() doesn't work well here
-        itemDoneState.put((int) findViewById(ids[0]).getTag(), sharedPref.getString("item1State", "false") == "true");
-        itemDoneState.put((int) findViewById(ids[1]).getTag(), sharedPref.getString("item2State", "false") == "true");
-        itemDoneState.put((int) findViewById(ids[2]).getTag(), sharedPref.getString("item3State", "false") == "true");
+        itemDoneState.put((int) findViewById(ids[0]).getTag(), sharedPref.getString("item1State", "false").equals("true"));
+        itemDoneState.put((int) findViewById(ids[1]).getTag(), sharedPref.getString("item2State", "false").equals("true"));
+        itemDoneState.put((int) findViewById(ids[2]).getTag(), sharedPref.getString("item3State", "false").equals("true"));
 
         Log.d("lP:itemState1", sharedPref.getString("item1State", "false"));
         Log.d("lP:itemState2", sharedPref.getString("item2State", "false"));
@@ -442,20 +440,19 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 });
 
         // TODO: refactor this
-        Context context = getApplicationContext();
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("item1", ((TextView) findViewById(R.id.item1)).getText().toString());
         editor.putString("item2", ((TextView) findViewById(R.id.item2)).getText().toString());
         editor.putString("item3", ((TextView) findViewById(R.id.item3)).getText().toString());
 
-        editor.putString("item1State", itemDoneState.get((int) findViewById(ids[0]).getTag()).toString());
-        editor.putString("item2State", itemDoneState.get((int) findViewById(ids[1]).getTag()).toString());
-        editor.putString("item3State", itemDoneState.get((int) findViewById(ids[2]).getTag()).toString());
+        editor.putString("item1State", itemDoneState.get(findViewById(ids[0]).getTag()).toString());
+        editor.putString("item2State", itemDoneState.get(findViewById(ids[1]).getTag()).toString());
+        editor.putString("item3State", itemDoneState.get(findViewById(ids[2]).getTag()).toString());
 
-        Log.d("save item1State", itemDoneState.get((int) findViewById(ids[0]).getTag()).toString());
-        Log.d("save item2State", itemDoneState.get((int) findViewById(ids[1]).getTag()).toString());
-        Log.d("save item3State", itemDoneState.get((int) findViewById(ids[2]).getTag()).toString());
+        Log.d("save item1State", itemDoneState.get(findViewById(ids[0]).getTag()).toString());
+        Log.d("save item2State", itemDoneState.get(findViewById(ids[1]).getTag()).toString());
+        Log.d("save item3State", itemDoneState.get(findViewById(ids[2]).getTag()).toString());
 
         editor.commit();
     }
@@ -465,30 +462,18 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     // http://developer.android.com/training/wearables/notifications/voice-input.html
     private void displaySpeechRecognizer() {
 
-        if (true) {
-            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,
-                    1);
-            intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE,
-                    1);
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                    true);
-            // Start the activity, the intent will be populated with the speech text
-            startActivityForResult(intent, SPEECH_REQUEST_CODE);
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,
+                1);
+        intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE,
+                1);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                true);
+        // Start the activity, the intent will be populated with the speech text
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
 
-        } else {
-            Bundle extras = new Bundle();
-            extras.putBoolean(RemoteInputConstants.EXTRA_DISALLOW_EMOJI, true);
-            RemoteInput remoteInput = new RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
-                    .setAllowFreeFormInput(true)
-                    .addExtras(extras)
-                    .build();
-            Intent intent = new Intent(RemoteInputIntent.ACTION_REMOTE_INPUT);
-            intent.putExtra(RemoteInputIntent.EXTRA_REMOTE_INPUTS, remoteInput);
-            //startActivity(intent);
-        }
     }
 
     // This callback is invoked when the Speech Recognizer returns.
@@ -496,24 +481,17 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
-        if (true) {
-            if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
-                List<String> results = data.getStringArrayListExtra(
-                        RecognizerIntent.EXTRA_RESULTS);
-                String spokenText = results.get(0);
-                if (longPressedView != null) {
-                    TextView v = (TextView) longPressedView;
-                    v.setText(spokenText);
-                    setItemNew(v);
-                    saveData();
-                }
-                // Do something with spokenText
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            if (longPressedView != null) {
+                TextView v = longPressedView;
+                v.setText(spokenText);
+                setItemNew(v);
+                saveData();
             }
-        } else {
-            Bundle results = RemoteInput.getResultsFromIntent(data);
-            if (results != null) {
-                CharSequence quickReplyResult = results.getCharSequence(KEY_QUICK_REPLY_TEXT);
-            }
+            // Do something with spokenText
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
