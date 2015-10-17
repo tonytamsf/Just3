@@ -49,7 +49,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     // Time in miliseconds for how long is a long hold to kick off changing
     // the data
     public static int LONG_PRESS_TIME = 1500;
-
+    public static int HACK_NO_TOUCH_AREA = 100;
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
     private GoogleApiClient mGoogleApiClient;
@@ -181,7 +181,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                                     + String.valueOf(event.getX()));
                     //
                     // Do not want to confuse a swipe to the left
-                    if (event.getX() < 120) {
+                    if (event.getX() < HACK_NO_TOUCH_AREA) {
                         return false;
                     }
                     switch (event.getAction()) {
