@@ -2,17 +2,19 @@ package com.wordpress.tonytam.just3;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.app.ActionBar;
+import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
+import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.activity.WearableActivity;
+import android.support.wearable.input.RemoteInputConstants;
+import android.support.wearable.input.RemoteInputIntent;
 import android.support.wearable.view.BoxInsetLayout;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
@@ -21,6 +23,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,12 +39,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+// TODO: Add alarm?  file:///Users/tonytam/Library/Android/sdk/docs/training/wearables/apps/always-on.html
 public class Just3Wear extends WearableActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    // TODO: Maybe display a simple clock when in ambient
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("HH:mm", Locale.US);
-    private static int TAG_ITEM_NUM = 1;
-    public static int LONG_PRESS_TIME = 1500; // Time in miliseconds
+
+    // Time in miliseconds for how long is a long hold to kick off changing
+    // the data
+    public static int LONG_PRESS_TIME = 1500;
 
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
@@ -54,9 +61,12 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     private TextView longPressedView;
     final Handler _handler = new Handler();
     private static final int SPEECH_REQUEST_CODE = 0;
+    public static final String KEY_QUICK_REPLY_TEXT = "quick_reply";
+
+    private static Boolean inPressed = false;
+    private static Toast toast = null;
 
     Just3Wear that = this;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +79,9 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
             @Override
             public void onLayoutInflated(WatchViewStub watchViewStub) {
-                setAmbientEnabled();
+                // NOTE: Don't hog batteries
+                // file:///Users/tonytam/Library/Android/sdk/docs/training/wearables/apps/always-on.html
+                // setAmbientEnabled();
 
                 mContainerView = (BoxInsetLayout) findViewById(R.id.container);
                 // mTextView = (TextView) findViewById(R.id.title);
@@ -80,7 +92,9 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 // We want touch events
                 attachEventsItems();
 
-                // Send data to the phone
+                // TODO: Send data to the phone
+                // I can't think of why, except to edit data on the phone which
+                // I don't really want to
                 mGoogleApiClient = new GoogleApiClient.Builder(that)
                         .addApi(Wearable.API)
                         .addConnectionCallbacks(that)
@@ -88,7 +102,8 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                         .build();
                 mGoogleApiClient.connect();
 
-                // Setup color map
+                // TODO: Thanks to C8, I have 3 colors.  She mentioned about
+                // giving me 20 colors that I can rotate on
                 colorMapOn = new HashMap<Integer, Integer>(3);
                 colorMapOn.put(R.id.item1, R.color.item1_on);
                 colorMapOn.put(R.id.item2, R.color.item2_on);
@@ -100,23 +115,10 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 colorMapOff.put(R.id.item3, R.color.item3_off);
 
                 itemDoneState = new HashMap<Integer, Boolean>(3);
-                refreshViewWithData();
 
-                // Darn Moto 360
-                Display display = getWindowManager().getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                int width = size.x;
-                int height = size.y;
-                Log.d("Screensize",
-                        String.valueOf(width)
-                                + " x "
-                                + String.valueOf(height));
-                View motoBox = findViewById(R.id.moto360filler);
-                if (motoBox != null) {
-                    motoBox.getLayoutParams().height = width - height;
-                    motoBox.setLayoutParams(motoBox.getLayoutParams());
-                }
+
+                refreshViewWithData();
+                handleDifferentScreens();
                 updateDisplay();
                 Log.d("Just3War:onCreate - ", "STARTED");
             }
@@ -125,6 +127,27 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     }
 
+    // handle custom work for
+    // 1) Moto 360 - leave the 20 pixel of bevel on the bottom, or hide it for others
+    private void handleDifferentScreens() {
+        // Darn Moto 360, the bottom bevel does not make my code elegant :)
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
+        Log.d("Screen",
+                String.valueOf(width)
+                        + " x "
+                        + String.valueOf(height));
+        View motoBox = findViewById(R.id.moto360filler);
+        if (motoBox != null) {
+            motoBox.getLayoutParams().height = width - height;
+            motoBox.setLayoutParams(motoBox.getLayoutParams());
+        }
+    }
+
+    // Custom handler for detecting long press
     Runnable _longPressed = new Runnable() {
         public void run() {
             if (longPressedView != null) {
@@ -134,6 +157,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         }
     };
 
+    // Initialize my brand new state
     private void initState() {
         numLeft = 3;
     }
@@ -163,11 +187,13 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             longPressedView = (TextView) v;
-                            onClick(v);
+                            onClick(v, event);
                             _handler.postDelayed(_longPressed, LONG_PRESS_TIME);
                             Log.d("onTouch", "action down");
                             return true;
                         case MotionEvent.ACTION_UP:
+                            onClick(v, event);
+
                             _handler.removeCallbacks(_longPressed);
                             Log.d("onTouch", "action up");
 
@@ -203,7 +229,8 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         super.onExitAmbient();
     }
 
-    // refresh the UI based on data changes
+    // TODO: refresh the UI based on data changes
+    // handle ambient mode
     private void updateDisplay() {
         if (isAmbient()) {
             mContainerView.setBackgroundColor(Color.BLACK);
@@ -222,26 +249,57 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         }
     }
 
-    public void onClick(View v) {
+    public void onClick(View v, MotionEvent event) {
 
         final TextView textView = (TextView) v;
-        Log.d("OnClick", textView.getText().toString());
-
-        int c = textView.getCurrentTextColor();
         Log.d("onClick : set Item", textView.getTag().toString());
 
-        if (c != Color.GRAY) {
-            setItemDone(textView);
-            itemDoneState.put((Integer) textView.getTag(), true);
-
-        } else {
-            itemDoneState.put((Integer) textView.getTag(), false);
-            setItemNew(textView);
+        if (toast == null) {
+            toast = Toast.makeText(getApplicationContext(),
+                    R.string.long_hold_for_new,
+                    Toast.LENGTH_SHORT
+                    );
         }
-        updateDisplay();
+        if (inPressed) {
+            inPressed = false;
+            return;
+        }
+        if (! itemDoneState.get((Integer) textView.getTag())) {
+            // Mark item as done
+            Log.d("item state A", itemDoneState.get((Integer) textView.getTag()).toString());
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                setItemDone(textView);
+                itemDoneState.put((Integer) textView.getTag(), true);
 
-        // save Data
-        sendTriData();
+                // When user just tap item, mark it in state map
+                // When they let go, we don't care about that event
+                inPressed = true;
+
+                Intent intent = new Intent(this, ConfirmationActivity.class);
+                intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                        ConfirmationActivity.SUCCESS_ANIMATION);
+                intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
+                        getString(R.string.long_hold_for_new));
+                startActivity(intent);
+            }
+        } else {
+            // Mark item as not done yet
+            Log.d("item state B", itemDoneState.get((Integer) textView.getTag()).toString());
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                itemDoneState.put((Integer) textView.getTag(), false);
+                setItemNew(textView);
+            } else {
+                Intent intent = new Intent(this, ConfirmationActivity.class);
+                intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                        ConfirmationActivity.OPEN_ON_PHONE_ANIMATION);
+                intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
+                        getString(R.string.focus_on_task));
+                startActivity(intent);
+            }
+        }
+
+        updateDisplay();
+        saveData();
     }
 
     private
@@ -342,15 +400,18 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         }
     }
 
+    // TODO: After loading data, recalculate what is numLeft
     public ArrayList<String> loadPreferences() {
         ArrayList<String> result = new ArrayList<String>(3);
         int ids[] = {R.id.item1, R.id.item2, R.id.item3};
 
         Context context = getApplicationContext();
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        result.add(sharedPref.getString("item1",  getResources().getString(R.string.item1)));
+        result.add(sharedPref.getString("item1", getResources().getString(R.string.item1)));
         result.add(sharedPref.getString("item2", getResources().getString(R.string.item2)));
         result.add(sharedPref.getString("item3", getResources().getString(R.string.item3)));
+
+        // NOTE: Weird, Boolean.loadValue() doesn't work well here
         itemDoneState.put((int) findViewById(ids[0]).getTag(), sharedPref.getString("item1State", "false") == "true");
         itemDoneState.put((int) findViewById(ids[1]).getTag(), sharedPref.getString("item2State", "false") == "true");
         itemDoneState.put((int) findViewById(ids[2]).getTag(), sharedPref.getString("item3State", "false") == "true");
@@ -362,9 +423,13 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         return result;
     }
 
-    public void sendTriData() {
+    // Save data as preferences
+    // item[1-3] : text of the items
+    // item[1-3]State : true if the item is done
+    public void saveData() {
         int ids[] = {R.id.item1, R.id.item2, R.id.item3};
 
+        //  TODO: send data to phone, what purpose?
         PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/v1/tri-data");
         putDataMapRequest.getDataMap().putString("item1", ((TextView) findViewById(R.id.item1)).getText().toString());
         putDataMapRequest.getDataMap().putString("item2", ((TextView) findViewById(R.id.item2)).getText().toString());
@@ -384,7 +449,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                     }
                 });
 
-        // Save data into preferences
+        // TODO: refactor this
         Context context = getApplicationContext();
         SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -403,36 +468,35 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         editor.commit();
     }
 
-
-    public void sendStepCount(int steps, long timestamp) {
-        PutDataMapRequest putDataMapRequest = PutDataMapRequest.create("/v1/step-count");
-
-        putDataMapRequest.getDataMap().putInt("step-count", steps);
-        putDataMapRequest.getDataMap().putLong("timestamp", timestamp);
-        PutDataRequest request = putDataMapRequest.asPutDataRequest();
-        Wearable.DataApi.putDataItem(mGoogleApiClient, request)
-                .setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
-                    @Override
-                    public void onResult(DataApi.DataItemResult dataItemResult) {
-                        if (!dataItemResult.getStatus().isSuccess()) {
-                            Log.d("debug", "Fail to send step count");
-
-                        } else {
-                            Log.d("debug", "Successfully send step count");
-                        }
-                        // https://www.udacity.com/course/viewer#!/c-ud875A/l-4582940110/m-4580800289
-                    }
-                });
-    }
-
-
     // Create an intent that can start the Speech Recognizer activity
+    // TODO: emoji as well?
+    // http://developer.android.com/training/wearables/notifications/voice-input.html
     private void displaySpeechRecognizer() {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        // Start the activity, the intent will be populated with the speech text
-        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+
+        if (true) {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,
+                    1);
+            intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE,
+                    1);
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                    true);
+            // Start the activity, the intent will be populated with the speech text
+            startActivityForResult(intent, SPEECH_REQUEST_CODE);
+
+        } else {
+            Bundle extras = new Bundle();
+            extras.putBoolean(RemoteInputConstants.EXTRA_DISALLOW_EMOJI, true);
+            RemoteInput remoteInput = new RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
+                    .setAllowFreeFormInput(true)
+                    .addExtras(extras)
+                    .build();
+            Intent intent = new Intent(RemoteInputIntent.ACTION_REMOTE_INPUT);
+            intent.putExtra(RemoteInputIntent.EXTRA_REMOTE_INPUTS, remoteInput);
+            //startActivity(intent);
+        }
     }
 
     // This callback is invoked when the Speech Recognizer returns.
@@ -440,20 +504,26 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
-        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
-            List<String> results = data.getStringArrayListExtra(
-                    RecognizerIntent.EXTRA_RESULTS);
-            String spokenText = results.get(0);
-            if (longPressedView != null) {
-                TextView v = (TextView) longPressedView;
-                v.setText(spokenText);
-                setItemNew(v);
-                sendTriData();
+        if (true) {
+            if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+                List<String> results = data.getStringArrayListExtra(
+                        RecognizerIntent.EXTRA_RESULTS);
+                String spokenText = results.get(0);
+                if (longPressedView != null) {
+                    TextView v = (TextView) longPressedView;
+                    v.setText(spokenText);
+                    setItemNew(v);
+                    saveData();
+                }
+                // Do something with spokenText
             }
-            // Do something with spokenText
+        } else {
+            Bundle results = RemoteInput.getResultsFromIntent(data);
+            if (results != null) {
+                CharSequence quickReplyResult = results.getCharSequence(KEY_QUICK_REPLY_TEXT);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 }
 

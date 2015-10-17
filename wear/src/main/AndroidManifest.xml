@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     package="com.wordpress.tonytam.just3" >
 
     <uses-feature android:name="android.hardware.type.watch" />
@@ -26,6 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        <annotation xs:id="NOTE:android.support.wearable.activity.ConfirmationActivity">
+            // file:///Users/tonytam/Library/Android/sdk/docs/training/wearables/ui/confirm.html
+        </annotation>
+        <activity android:name="android.support.wearable.activity.ConfirmationActivity">
+            </activity>
 
+    </application>
 </manifest>
