@@ -59,7 +59,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     private TextView longPressedView;
     final Handler _handler = new Handler();
     private static final int SPEECH_REQUEST_CODE = 0;
-    public static final String KEY_QUICK_REPLY_TEXT = "quick_reply";
 
     private static Boolean inPressed = false;
 
@@ -290,7 +289,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         }
 
         updateDisplay();
-        saveData();
+        savePreferences();
     }
 
     private
@@ -416,7 +415,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     // Save data as preferences
     // item[1-3] : text of the items
     // item[1-3]State : true if the item is done
-    public void saveData() {
+    public void savePreferences() {
         int ids[] = {R.id.item1, R.id.item2, R.id.item3};
 
         //  TODO: send data to phone, what purpose?
@@ -489,7 +488,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 TextView v = longPressedView;
                 v.setText(spokenText);
                 setItemNew(v);
-                saveData();
+                savePreferences();
             }
             // Do something with spokenText
         }
