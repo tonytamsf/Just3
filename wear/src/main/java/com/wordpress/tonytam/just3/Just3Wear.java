@@ -23,7 +23,6 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -64,7 +63,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     public static final String KEY_QUICK_REPLY_TEXT = "quick_reply";
 
     private static Boolean inPressed = false;
-    private static Toast toast = null;
 
     Just3Wear that = this;
     @Override
@@ -254,19 +252,13 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         final TextView textView = (TextView) v;
         Log.d("onClick : set Item", textView.getTag().toString());
 
-        if (toast == null) {
-            toast = Toast.makeText(getApplicationContext(),
-                    R.string.long_hold_for_new,
-                    Toast.LENGTH_SHORT
-                    );
-        }
         if (inPressed) {
             inPressed = false;
             return;
         }
         if (! itemDoneState.get((Integer) textView.getTag())) {
             // Mark item as done
-            Log.d("item state A", itemDoneState.get((Integer) textView.getTag()).toString());
+            Log.d("item state A", itemDoneState.get(textView.getTag()).toString());
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 setItemDone(textView);
                 itemDoneState.put((Integer) textView.getTag(), true);
@@ -284,7 +276,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             }
         } else {
             // Mark item as not done yet
-            Log.d("item state B", itemDoneState.get((Integer) textView.getTag()).toString());
+            Log.d("item state B", itemDoneState.get(textView.getTag()).toString());
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 itemDoneState.put((Integer) textView.getTag(), false);
                 setItemNew(textView);
