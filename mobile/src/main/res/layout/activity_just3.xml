@@ -1,11 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".Just3">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Just3"
+    android:gravity="fill_vertical">
 
-    <TextView android:text="tri - 3 focuses a day.  everything is on your watch!" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".Just3"
+        android:background="@color/item3_off">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="18dp"
+            android:text="@string/desc"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="29"
+        android:layout_gravity="left">
+
+        <TextView
+            android:id="@+id/item1"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/item1"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:background="@color/item1_on"
+            android:textSize="15sp"
+            android:enabled="true"
+            android:singleLine="false"
+            android:paddingLeft="35sp"
+            android:paddingRight="35sp"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="32"
+        android:layout_gravity="left|top">
+
+        <TextView
+            android:id="@+id/item2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/item2"
+            android:textColor="@android:color/black"
+            android:layout_weight="33"
+            android:gravity="center"
+            android:background="@color/item2_on"
+            android:textSize="15sp"
+            android:singleLine="false"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="32">
+
+        <TextView
+            android:id="@+id/item3"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/item3"
+            android:textColor="@android:color/black"
+            android:layout_weight="33"
+            android:gravity="center"
+            android:background="@color/item3_on"
+            android:textSize="15sp"
+            android:singleLine="false"
+            android:nestedScrollingEnabled="true"
+            android:paddingLeft="30sp"
+            android:paddingRight="30sp"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
