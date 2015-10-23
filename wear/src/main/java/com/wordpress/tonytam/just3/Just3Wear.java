@@ -279,12 +279,14 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 itemDoneState.put((Integer) textView.getTag(), false);
                 setItemNew(textView);
             } else {
-                Intent intent = new Intent(this, ConfirmationActivity.class);
-                intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                        ConfirmationActivity.OPEN_ON_PHONE_ANIMATION);
-                intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
-                        getString(R.string.focus_on_task));
-                startActivity(intent);
+                if (false) {
+                    Intent intent = new Intent(this, ConfirmationActivity.class);
+                    intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                            ConfirmationActivity.OPEN_ON_PHONE_ANIMATION);
+                    intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
+                            getString(R.string.focus_on_task));
+                    startActivity(intent);
+                }
             }
         }
 
