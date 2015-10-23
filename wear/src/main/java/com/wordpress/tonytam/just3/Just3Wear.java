@@ -2,7 +2,6 @@ package com.wordpress.tonytam.just3;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.app.RemoteInput;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,8 +12,6 @@ import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.input.RemoteInputConstants;
-import android.support.wearable.input.RemoteInputIntent;
 import android.support.wearable.view.BoxInsetLayout;
 import android.support.wearable.view.WatchViewStub;
 import android.util.Log;
@@ -184,22 +181,15 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                         case MotionEvent.ACTION_DOWN:
                             longPressedView = (TextView) v;
                             onClick(v, event);
-                            _handler.postDelayed(_longPressed, LONG_PRESS_TIME);
                             Log.d("onTouch", "action down");
                             return true;
                         case MotionEvent.ACTION_UP:
-                            onClick(v, event);
+                            longPressedView = (TextView) v;
 
-                            _handler.removeCallbacks(_longPressed);
+                            onClick(v, event);
                             Log.d("onTouch", "action up");
 
                             return true;
-                        case MotionEvent.ACTION_MOVE:
-                            _handler.removeCallbacks(_longPressed);
-                            Log.d("onTouch", "action move");
-
-                            return true;
-
                     }
                     return false;
                 }
@@ -269,24 +259,17 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
                         ConfirmationActivity.SUCCESS_ANIMATION);
                 intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
-                        getString(R.string.long_hold_for_new));
+                        getString(R.string.tap_again_for_new));
                 startActivity(intent);
             }
         } else {
             // Mark item as not done yet
             Log.d("item state B", itemDoneState.get(textView.getTag()).toString());
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                itemDoneState.put((Integer) textView.getTag(), false);
-                setItemNew(textView);
-            } else {
-                if (false) {
-                    Intent intent = new Intent(this, ConfirmationActivity.class);
-                    intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                            ConfirmationActivity.OPEN_ON_PHONE_ANIMATION);
-                    intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
-                            getString(R.string.focus_on_task));
-                    startActivity(intent);
-                }
+                longPressedView = (TextView) v;
+
+                displaySpeechRecognizer();
+
             }
         }
 
@@ -482,19 +465,26 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
+        TextView v = longPressedView;
+
         if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
             List<String> results = data.getStringArrayListExtra(
                     RecognizerIntent.EXTRA_RESULTS);
             String spokenText = results.get(0);
+
+
             if (longPressedView != null) {
-                TextView v = longPressedView;
                 v.setText(spokenText);
-                setItemNew(v);
-                savePreferences();
+
             }
-            // Do something with spokenText
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
+        if (longPressedView != null) {
+            itemDoneState.put((Integer) longPressedView.getTag(), false);
+            setItemNew(v);
+            savePreferences();
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
 

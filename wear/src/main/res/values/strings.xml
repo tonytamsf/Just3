@@ -5,6 +5,6 @@
     <string name="item2">Long hold: to change task</string>
     <string name="item3">Focus: on 3 task a day</string>
     <string name="done">All Done!</string>
-    <string name="long_hold_for_new">Hold to replace</string>
+    <string name="tap_again_for_new">Tap to replace</string>
     <string name="focus_on_task">Re-focus on task</string>
 </resources>

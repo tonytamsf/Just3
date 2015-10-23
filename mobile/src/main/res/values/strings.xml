@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Tri Wear</string>
+    <string name="app_name">tri wear</string>
     <string name="action_settings">Settings</string>
-    <string name="title">Tri</string>
+    <string name="title">tri</string>
     <string name="item1">Tap: to complete a task</string>
     <string name="item2">Long hold: to change task</string>
     <string name="item3">Focus: on 3 task a day</string>
