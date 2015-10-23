@@ -1,6 +1,18 @@
 # Just3
 Just 3 Per Day App for Android Wearable
 
+# Day 4
+- published to the Google Play App store
+<img width="228" alt="screen shot 2015-10-23 at 12 24 27 am" src="https://cloud.githubusercontent.com/assets/149837/10686783/83adb3da-791c-11e5-8d03-6411666b449c.png">
+
+![screenshot-1024x500](https://cloud.githubusercontent.com/assets/149837/10686791/98a8388c-791c-11e5-848e-584168c335cf.png)
+![tr-enter-sq](https://cloud.githubusercontent.com/assets/149837/10686796/9c7671fe-791c-11e5-8aa1-0402e60716db.png)
+![tri-replace-sq](https://cloud.githubusercontent.com/assets/149837/10686798/9e2b0b72-791c-11e5-8fae-df5d58337ea6.png)
+![tri-2-done-sq](https://cloud.githubusercontent.com/assets/149837/10686799/9ff3fdba-791c-11e5-9026-1d6b7cbbe959.png)
+
+<img width="547" alt="screen shot 2015-10-23 at 12 29 50 am" src="https://cloud.githubusercontent.com/assets/149837/10686869/492cb494-791d-11e5-9111-a66523fa283c.png">
+
+
 # Day 3
 - save preferences and restore state
 - handle round and square faces
