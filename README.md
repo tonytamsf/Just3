@@ -3,6 +3,7 @@ Just 3 Per Day App for Android Wearable
 
 # Day 4
 - published to the Google Play App store
+
 <img width="228" alt="screen shot 2015-10-23 at 12 24 27 am" src="https://cloud.githubusercontent.com/assets/149837/10686783/83adb3da-791c-11e5-8d03-6411666b449c.png">
 
 ![screenshot-1024x500](https://cloud.githubusercontent.com/assets/149837/10686791/98a8388c-791c-11e5-848e-584168c335cf.png)
