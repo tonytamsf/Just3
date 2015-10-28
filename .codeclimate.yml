@@ -1,2 +1,3 @@
-languages:
-   Java: true
+engines:
+  java:
+    enabled: true
