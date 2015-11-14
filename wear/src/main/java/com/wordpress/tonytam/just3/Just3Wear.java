@@ -20,6 +20,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -255,12 +256,20 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 // When they let go, we don't care about that event
                 inPressed = true;
 
+                /*
                 Intent intent = new Intent(this, ConfirmationActivity.class);
                 intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
                         ConfirmationActivity.SUCCESS_ANIMATION);
                 intent.putExtra(ConfirmationActivity.EXTRA_MESSAGE,
                         getString(R.string.tap_again_for_new));
                 startActivity(intent);
+                */
+
+                Toast.makeText(getApplicationContext(),
+                        getApplicationContext().
+                                getString(R.string.tap_again_for_new),
+                                 Toast.LENGTH_LONG).show();
+
             }
         } else {
             // Mark item as not done yet
