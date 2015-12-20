@@ -253,7 +253,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                 itemDoneState.put((Integer) textView.getTag(), true);
 
                 // When user just tap item, mark it in state map
-                // When they let go, we don't care about that event
+                // When they let go, we don't care awbout that event
                 inPressed = true;
 
                 /*
@@ -301,8 +301,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         textView.setTextColor(Color.GRAY);
 
         numLeft--;
-
-
     }
     private
     void setItemNew(TextView textView) {

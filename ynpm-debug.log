@@ -1,0 +1,47 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/ynpm', 'run', 'functional-websearch' ]
+2 silly now Fri Nov 13 2015 17:39:20 GMT-0800 (PST)
+3 silly hostname monthparty-lm
+4 silly platform darwin
+5 silly arch x64
+6 silly release 14.0.0
+7 silly node { http_parser: '2.3',
+7 silly node   node: '0.12.2',
+7 silly node   v8: '3.28.73',
+7 silly node   uv: '1.4.2-node1',
+7 silly node   zlib: '1.2.8',
+7 silly node   modules: '14',
+7 silly node   openssl: '1.0.1m',
+7 silly node   ynpm: '3.0.52',
+7 silly node   npm: '2.8.1' }
+8 info using ynpm@3.0.52
+9 info using npm@2.8.1
+10 info using node@v0.12.2
+11 silly conf { argv:
+11 silly conf    { remain: [ 'run', 'functional-websearch' ],
+11 silly conf      cooked: [ 'run', 'functional-websearch' ],
+11 silly conf      original: [ 'run', 'functional-websearch' ] } }
+12 silly argv undefined
+13 verbose config Skipping project config: /Users/tonytam/.npmrc. (matches userconfig)
+14 silly looking for command:  install
+15 silly found proxy command for install
+16 silly looking for command:  run
+17 info command completed in: 0.467 seconds
+18 verbose stack Error: ENOENT, open '/Users/tonytam/package.json'
+18 verbose stack     at Error (native)
+19 verbose cwd /Users/tonytam/Dropbox/git/Just3
+20 error Darwin 14.0.0
+21 error argv "node" "/usr/local/bin/ynpm" "run" "functional-websearch"
+22 error node v0.12.2
+23 error npm -v 2.8.1
+24 error ynpm -v 3.0.52
+25 error path /Users/tonytam/package.json
+26 error code ENOENT
+27 error errno -2
+28 error ENOENT, open '/Users/tonytam/package.json'
+29 error If you need help, you may report this log at:
+29 error  <https://partner.git.corp.yahoo.com/ynpm/ynpm/issues>
+29 error or file a ticket at :
+29 error yo/sd-support or at
+29 error yo/ynodejs-support
+30 verbose exit [ -2, true ]
