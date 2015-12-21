@@ -6,4 +6,6 @@
     <color name="item1_off">#97D1FC</color>
     <color name="item2_off">#FFF5B7</color>
     <color name="item3_off">#FEBFD4</color>
+    <color name="item_text_on">#640e0e</color>
+    <color name="item_text_off">#816464</color>
 </resources>

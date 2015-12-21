@@ -220,13 +220,13 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     // handle ambient mode
     private void updateDisplay() {
         if (isAmbient()) {
-            mContainerView.setBackgroundColor(Color.BLACK);
+            mContainerView.setBackgroundColor(getResources().getColor(R.color.item_text_on));
             // mTextView.setTextColor(Color.DKGRAY);
 
             // mTextView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
         } else {
             mContainerView.setBackground(null);
-            // mTextView.setTextColor(Color.BLACK);
+            // mTextView.setTextColor(getResources().getColor(R.color.item_text_on));
             if (numLeft == 0) {
                 // mTextView.setTextColor(Color.GREEN);
                 // mTextView.setText(getResources().getString(R.string.done));
@@ -295,8 +295,8 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         animateBackground(textView,
                 getResources().getColor(colorMapOn.get(textView.getId())),
                 getResources().getColor(colorMapOff.get(textView.getId())),
-                Color.BLACK,
-                Color.GRAY
+                getResources().getColor(R.color.item_text_on),
+                getResources().getColor(R.color.item_text_off)
         );
         textView.setTextColor(Color.GRAY);
 
@@ -310,10 +310,10 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         animateBackground(textView,
                 getResources().getColor(colorMapOff.get(textView.getId())),
                 getResources().getColor(colorMapOn.get(textView.getId())),
-                Color.GRAY,
-                Color.BLACK
+                getResources().getColor(R.color.item_text_off),
+                getResources().getColor(R.color.item_text_on)
         );
-        textView.setTextColor(Color.BLACK);
+        textView.setTextColor(getResources().getColor(R.color.item_text_on));
         numLeft++;
     }
     private
