@@ -46,7 +46,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     // Time in miliseconds for how long is a long hold to kick off changing
     // the data
     public static int LONG_PRESS_TIME = 1500;
-    public static int HACK_NO_TOUCH_AREA = 100;
+    public static int HACK_NO_TOUCH_AREA = 150;
     private BoxInsetLayout mContainerView;
     private GoogleApiClient mGoogleApiClient;
     public int numLeft;
@@ -96,8 +96,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                         .build();
                 mGoogleApiClient.connect();
 
-                // TODO: Thanks to C8, I have 3 colors.  She mentioned about
-                // giving me 20 colors that I can rotate on
                 colorMapOn = new HashMap<Integer, Integer>(3);
                 colorMapOn.put(R.id.item1, R.color.item1_on);
                 colorMapOn.put(R.id.item2, R.color.item2_on);
@@ -139,6 +137,9 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             motoBox.getLayoutParams().height = width - height;
             motoBox.setLayoutParams(motoBox.getLayoutParams());
         }
+
+        // a little left of center
+        HACK_NO_TOUCH_AREA = (width / 2) - 20;
     }
 
     // Custom handler for detecting long press
@@ -175,6 +176,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
                                     + String.valueOf(event.getX()));
                     //
                     // Do not want to confuse a swipe to the left
+                    // If a user touches any area to the left of HACK_NO_TOUCH_AREA, then we don't care
                     if (event.getX() < HACK_NO_TOUCH_AREA) {
                         return false;
                     }
@@ -456,17 +458,12 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS,
-                true);
-        intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE,
-                true);
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,
                 1);
-        intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE,
-                1);
         intent.putExtra(RecognizerIntent.EXTRA_CONFIDENCE_SCORES,
-                0.5
-                );
+                0.8);
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS,
+                true);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 true);
         // Start the activity, the intent will be populated with the speech text
