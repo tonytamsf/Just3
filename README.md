@@ -1,4 +1,4 @@
-# Just3
+#Tri
 Just 3 Per Day App for Android Wearable
 
 # Day 4
