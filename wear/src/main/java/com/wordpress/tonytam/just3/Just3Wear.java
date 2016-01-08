@@ -45,7 +45,6 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
 
     // Time in miliseconds for how long is a long hold to kick off changing
     // the data
-    public static int LONG_PRESS_TIME = 1500;
     public static int HACK_NO_TOUCH_AREA = 150;
     private BoxInsetLayout mContainerView;
     private GoogleApiClient mGoogleApiClient;
@@ -247,9 +246,9 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             inPressed = false;
             return;
         }
-        if (! itemDoneState.get(textView.getTag())) {
+        if (! itemDoneState.get(Integer.getInteger((String) textView.getTag()))) {
             // Mark item as done
-            Log.d("item state A", itemDoneState.get(textView.getTag()).toString());
+            Log.d("item state A", itemDoneState.get((int) textView.getTag()).toString());
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 setItemDone(textView);
                 itemDoneState.put((Integer) textView.getTag(), true);
@@ -275,7 +274,7 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             }
         } else {
             // Mark item as not done yet
-            Log.d("item state B", itemDoneState.get(textView.getTag()).toString());
+            Log.d("item state B", itemDoneState.get((int) textView.getTag()).toString());
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 longPressedView = (TextView) v;
 
@@ -453,6 +452,9 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
     // Create an intent that can start the Speech Recognizer activity
     // TODO: emoji as well?
     // http://developer.android.com/training/wearables/notifications/voice-input.html
+    // TODO: recognize words
+    // cancel: to undo the speech
+    //
     private void displaySpeechRecognizer() {
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
