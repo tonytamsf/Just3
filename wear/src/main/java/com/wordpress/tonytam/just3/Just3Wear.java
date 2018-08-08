@@ -246,7 +246,9 @@ public class Just3Wear extends WearableActivity implements GoogleApiClient.Conne
             inPressed = false;
             return;
         }
-        if (! itemDoneState.get((Integer)(textView.getTag()))) {
+
+        Object tag = itemDoneState.get((Integer)(textView.getTag()));
+        if (tag == null || ! (Boolean) tag ) {
             // Mark item as done
             Log.d("item state A", itemDoneState.get((int) textView.getTag()).toString());
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
