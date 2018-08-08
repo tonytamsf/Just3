@@ -27,9 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <annotation xs:id="NOTE:android.support.wearable.activity.ConfirmationActivity">
-            // file:///Users/tonytam/Library/Android/sdk/docs/training/wearables/ui/confirm.html
-        </annotation>
+
         <activity android:name="android.support.wearable.activity.ConfirmationActivity">
             </activity>
 
